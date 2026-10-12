@@ -41,7 +41,7 @@ When Zed has been launched via the macOS Dock, or a GNOME or KDE icon on Linux, 
 
 To still have a useful environment, Zed spawns a login shell in the user's home directory and reads its environment. This environment is then set on the Zed _process_, so all Zed windows and projects inherit it.
 
-Since that can lead to problems for users who need different environment variables per project (for example with `direnv`, `asdf`, or `mise`), Zed spawns another login shell when opening a project. This second shell runs in the project's directory. The environment from that shell is _not_ set on the process, because opening a new project would otherwise change the environment for all Zed windows. Instead, that environment is stored and passed along when running tasks, opening terminals, or spawning language servers.
+Since that can lead to problems for users who need different environment variables per project (for example with `direnv`, `devenv`, `asdf`, or `mise`), Zed spawns another login shell when opening a project. This second shell runs in the project's directory. The environment from that shell is _not_ set on the process, because opening a new project would otherwise change the environment for all Zed windows. Instead, that environment is stored and passed along when running tasks, opening terminals, or spawning language servers.
 
 ## Where and how are environment variables used?
 
@@ -61,6 +61,7 @@ Tasks are spawned with a combined environment. In order of precedence (low to hi
 - the Zed process environment
 - if the project was opened from the CLI: the CLI environment
 - if the project was not opened from the CLI: the project environment variables obtained by running a login shell in the project's root folder
+- if the project is a trusted [devenv](https://devenv.sh/) project: its environment variables, see [`load_devenv`](./reference/all-settings.md#devenv)
 - optional, explicitly configured environment in settings
 
 ### Built-in terminal
@@ -70,6 +71,7 @@ Built-in terminals, like tasks, are spawned with a combined environment. In orde
 - the Zed process environment
 - if the project was opened from the CLI: the CLI environment
 - if the project was not opened from the CLI: the project environment variables obtained by running a login shell in the project's root folder
+- if the project is a trusted [devenv](https://devenv.sh/) project: its environment variables, see [`load_devenv`](./reference/all-settings.md#devenv)
 - optional, explicitly configured environment in settings
 
 ### Look-up of language servers
@@ -86,6 +88,7 @@ For this look-up, Zed uses the following environment:
 
 - if the project was opened from the CLI: the CLI environment
 - if the project was not opened from the CLI: the project environment variables obtained by running a login shell in the project's root folder
+- if the project is a trusted [devenv](https://devenv.sh/) project: its environment variables, see [`load_devenv`](./reference/all-settings.md#devenv)
 
 ### Language servers
 

@@ -606,6 +606,7 @@ See [Git documentation](../git.md#diff-view-styles) for more details.
 - Description: Settings for [direnv](https://direnv.net/) integration. Requires `direnv` to be installed.
   `direnv` integration makes it possible to use the environment variables set by a `direnv` configuration to detect some language servers in `$PATH` instead of installing them.
   It also allows for those environment variables to be used in tasks.
+  The environment is reloaded when `.envrc` changes at the root of the project.
 - Setting: `load_direnv`
 - Default: `"direct"`
 
@@ -616,6 +617,22 @@ There are three options to choose from:
 1. `shell_hook`: Use the shell hook to load direnv. This relies on direnv to activate upon entering the directory. Supports POSIX shells and fish.
 2. `direct`: Use `direnv export json` to load direnv. This will load direnv directly without relying on the shell hook and might cause some inconsistencies. This allows direnv to work with any shell.
 3. `disabled`: No shell environment will be loaded automatically; direnv must be invoked manually (e.g. with `direnv exec`) to be used.
+
+## Devenv
+
+- Description: Settings for [devenv](https://devenv.sh/) integration. Requires `devenv` 2.1 or newer to be installed.
+  `devenv` integration makes it possible to use the environment variables set by a `devenv.nix` configuration to detect language servers in `$PATH` and use environment variables in tasks and terminals.
+  This applies to projects opened from the CLI as well: devenv is applied on top of the environment inherited from the CLI.
+  The environment is reloaded when `devenv.nix`, `devenv.yaml`, `devenv.lock`, `devenv.local.nix`, `devenv.local.yaml`, or `.envrc` change at the root of the project. New terminals, tasks, and language server starts then use the updated environment, while already running terminals keep their current environment.
+- Setting: `load_devenv`
+- Default: `"direct"`
+
+**Options**
+
+There are two options to choose from:
+
+1. `direct`: Use `devenv print-dev-env --json` to load devenv directly. Like devenv's own shell hook, this only happens for projects that have been trusted with `devenv allow`, and is skipped when the environment is already active (for example when Zed was launched from within `devenv shell`, or direnv's `use devenv` loaded it). Projects that have not been trusted show a hint to run `devenv allow` instead of loading their environment. With devenv versions older than 2.1, no environment is loaded and a warning is logged. Evaluating the configuration may take a while the first time a project is opened. When a variable is set by both direnv and devenv, the devenv value wins; the `PATH` and `XDG_DATA_DIRS` entries from devenv are prepended. Note that `enterShell` scripts are not run in this mode.
+2. `disabled`: No devenv environment will be loaded automatically.
 
 ## Double Click In Multibuffer
 

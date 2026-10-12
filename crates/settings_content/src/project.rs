@@ -78,6 +78,9 @@ pub struct ProjectSettingsContent {
     /// Configuration for how direnv configuration should be loaded
     pub load_direnv: Option<DirenvSettings>,
 
+    /// Configuration for how devenv configuration should be loaded
+    pub load_devenv: Option<DevenvSettings>,
+
     /// The list of custom Git hosting providers.
     pub git_hosting_providers: Option<ExtendingVec<GitHostingProviderConfig>>,
 
@@ -90,7 +93,7 @@ pub struct ProjectSettingsContent {
 crate::fallible_options::flattened_deserialize!(ProjectSettingsContent {
     sections: { all_languages, worktree },
     options: {
-        terminal, context_server_timeout, load_direnv, git_hosting_providers, disable_ai,
+        terminal, context_server_timeout, load_direnv, load_devenv, git_hosting_providers, disable_ai,
     },
     defaults: { lsp, dap, context_servers },
 });
@@ -894,6 +897,17 @@ pub enum DirenvSettings {
     #[default]
     Direct,
     /// Do not load direnv configuration
+    Disabled,
+}
+
+#[derive(Clone, PartialEq, Debug, Default, Serialize, Deserialize, JsonSchema, MergeFrom)]
+#[serde(rename_all = "snake_case")]
+pub enum DevenvSettings {
+    /// Load devenv configuration directly using `devenv print-dev-env --json`,
+    /// for projects trusted with `devenv allow`
+    #[default]
+    Direct,
+    /// Do not load devenv configuration
     Disabled,
 }
 

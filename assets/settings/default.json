@@ -1806,6 +1806,14 @@
   // 3. Don't load direnv configuration at all.
   //      "load_direnv": "disabled"
   "load_direnv": "direct",
+  // Configuration for how devenv configuration should be loaded. Requires devenv 2.1 or
+  // newer. May take 2 values:
+  // 1. Load devenv configuration using `devenv print-dev-env --json` directly,
+  //    for projects trusted with `devenv allow`.
+  //      "load_devenv": "direct"
+  // 2. Don't load devenv configuration at all.
+  //      "load_devenv": "disabled"
+  "load_devenv": "direct",
   "edit_predictions": {
     // Which edit prediction provider to use.
     "provider": "zed",
